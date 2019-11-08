@@ -1,0 +1,39 @@
+body {
+  background-color: #eee;
+}
+
+.nav-wrapper ul li:hover {
+  background-color: #fe6e00;
+}
+
+.card-title {
+  text-align: center;
+}
+
+.btn.south-system-theme {
+  background: #fe6e00;
+}
+
+.input-field label {
+  color: #fe6e00;
+}
+.input-field input[type="text"]:focus + label {
+  color: #fe6e00;
+}
+.input-field input[type="text"]:focus {
+  border-bottom: 1px solid #000;
+  box-shadow: 0 1px 0 0 #000;
+}
+.input-field input[type="text"].valid {
+  border-bottom: 1px solid green;
+  box-shadow: 0 1px 0 0 green;
+}
+.input-field select.valid {
+  border-bottom: 1px solid green;
+  box-shadow: 0 1px 0 0 green;
+}
+
+.input-field input[type="text"].invalid {
+  border-bottom: 1px solid red;
+  box-shadow: 0 1px 0 0 red;
+}
