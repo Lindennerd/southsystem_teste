@@ -16,70 +16,100 @@
       <div class="nav-wrapper grey darken-4">
         <a href="#" class="brand-logo center">Biblioteca South System</a>
         <ul id="nav-mobile" class="right">
-          <li><a href="">Login</a></li>
+          <li><a href=""><i class="material-icons left">person</i>Login</a></li>
+        </ul>
+        <ul class="left">
+          <li><a class="modal-trigger" href="#new-book"><i class="material-icons left">add</i> Novo</a></li>
         </ul>
       </div>
     </nav>
   </div>
 
   <div class="row">
-    <div class="col s4">
-      <div class="card">
-        <div class="card-content">
-          <div class="card-title">Livros</div>
-          <div id="books-list" class="collection"></div>
+    <div class="col s12" id="books-list">
+      <div class="card red" id="nothing-to-display">
+        <div class="card-content title">
+          Nenhum Livro a ser exibido aqui. Utilize o menu <i>Novo</i> para adicionar livros.
         </div>
       </div>
     </div>
-    <div class="col s8">
-      <div class="card">
-        <div class="card-content">
-          <div class="card-title">Informações do livro</div>
-          <div id="book-infos">
+  </div>
 
+  <div id="new-book" class="modal">
+    <div class="modal-content">
+      <form id="new-book-form" enctype="multipart/form-data" >
+        <div class="row">
+          <input type="text" value="" id="id" name="id" style="display: none">
+          <div class="input-field file-field col s8">
+            <div class="btn">
+              <span>Capa</span>
+              <input type="file" id="bookCover">
+            </div>
+            <div class="file-path-wrapper">
+              <input class="file-path validate" name="bookCover" type="text">
+            </div>
           </div>
-          <div class="card-action">
-            <a class="south-system-theme btn modal-trigger" href="#new-book">Novo</a>
+          <div class="col s4">
+            <div class="cover-preview">
+              <img src="" alt="Pré-Visualização da capa do livro" id="book-cover-preview">
+            </div>
           </div>
+          <div class="input-field col s6">
+            <input type="text" name="bookTitle" id="bookTitle" class="validate" required>
+            <label for="bookTitle">Título do Livro</label>
+          </div>
+          <div class="input-field col s6">
+            <input type="text" name="bookISBN" id="bookISBN" class="validate" required>
+            <label for="bookISBN">ISBN</label>
+          </div>
+          <div class="input-field col s6">
+            <select name="bookCategory" id="bookCategory" required>
+              <option disabled selected>Escolha uma Categoria</option>
+              <option value="Ficção">Ficção</option>
+              <option value="Novela">Novela</option>
+            </select>
+            <label for="bookCategory">Categoria</label>
+          </div>
+          <div class="input-field col s6">
+            <input type="number" name="bookYear" id="bookYear" class="validate" min="1900" max="2019" step="1"
+              value="2019" required>
+            <label for="bookYear">Ano</label>
+          </div>
+          <div class="input-field col s6">
+            <input type="text" name="bookAuthor" id="bookAuthor" class="validate" required>
+            <label for="bookAuthor">Autor</label>
+          </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="btn-flat btn" id="save-new-book"><i class="material-icons left">save</i>Salvar</a>
+    <a href="#!" class="modal-close btn-flat btn"><i class="material-icons left">close</i>Fechar</a>
+  </div>
+
+  <template id="book-template">
+    <div class="col s2">
+      <div class="card">
+        <div class="card-image">
+          <img src="" alt="">
+          <a class="btn-floating halfway-fab yellow btn"><i class="material-icons">star</i></a>
+        </div>
+        <div class="card-content">
+          <span class="card-title"></span>
+          <p><span class="title">Autor:</span><span id="book-author"></span></p>
+          <p><span class="title">Ano:</span><span id="book-year"></span></p>
+          <p><span class="title">Categoria:</span><span id="book-category"></span></p>
+          <p><span class="title">ISBN:</span><span id="book-isbn"></span></p>
+        </div>
+        <div class="card-action">
+          <button class="btn btn-flat" id="delete-book" ><i class="material-icons left">delete</i>Exluir</button>
+          <button class="btn btn-flat" id="edit-book"><i class="material-icons left">edit</i>Editar</button>
         </div>
       </div>
     </div>
+  </template>
 
-
-    <div id="new-book" class="modal">
-      <div class="modal-content">
-        <form id="new-book-form">
-          <div class="row">
-            <div class="input-field col s6">
-              <input type="text" name="bookTitle" id="bookTitle" class="validate" required>
-              <label for="bookTitle">Título do Livro</label>
-            </div>
-            <div class="input-field col s6">
-              <input type="text" name="bookISBN" id="bookISBN" class="validate" required>
-              <label for="bookISBN">ISBN</label>
-            </div>
-            <div class="input-field col s6">
-              <select name="bookCategory" required>
-                <option disabled selected>Escolha uma Categoria</option>
-                <option value="Ficção">Ficção</option>
-                <option value="Novela">Novela</option>
-              </select>
-              <label for="bookCategory">Categoria</label>
-            </div>
-            <div class="input-field col s6" >
-                <input type="number" name="bookYear" id="bookYear" class="validate" min="1900" max="2099" step="1" value="2019" required>
-                <label for="bookYear">Ano</label>
-              </div>
-          </form>
-          </div>
-      </div>
-      <div class="modal-footer">
-        <a href="#!" class="btn-flat south-system-theme" id="save-new-book">Salvar</a>
-        <a href="#!" class="modal-close btn-flat south-system-theme">Fechar</a>
-      </div>
-    </div>
-
-    <script type="text/javascript" src="/javascripts/index.js"></script>
+  <script type="text/javascript" src="/javascripts/index.js"></script>
 </body>
 
 </html>
