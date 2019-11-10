@@ -2,6 +2,8 @@
 <html>
 
 <head>
+  <title>South System - Biblioteca</title>
+
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link rel="stylesheet" href="/stylesheets/style.css">
@@ -11,35 +13,72 @@
 </head>
 
 <body>
-  <div class="navbar-fixed">
-    <nav>
-      <div class="nav-wrapper grey darken-4">
-        <a href="#" class="brand-logo center">Biblioteca South System</a>
-        <ul id="nav-mobile" class="right">
-          <li><a href=""><i class="material-icons left">person</i>Login</a></li>
-        </ul>
-        <ul class="left">
-          <li><a class="modal-trigger" href="#new-book"><i class="material-icons left">add</i> Novo</a></li>
-        </ul>
-      </div>
-    </nav>
+  <nav class="nav-extended">
+    <div class="navbar-fixed">
+        <div class="nav-wrapper grey darken-4">
+          <a href="#" class="brand-logo center">Biblioteca South System</a>
+          <ul id="nav-mobile" class="right">
+            <li id="user-info" style="display: none">
+              <a href="" id="user">
+                <i class="material-icons left">person</i>
+              </a>
+            </li>
+            <li id="login-menu">
+              <a href="" >
+                <i class="material-icons left">person</i>Login
+              </a>
+            </li>
+          </ul>
+          <ul class="left">
+            <li>
+              <a class="modal-trigger" href="#new-book">
+                <i class="material-icons left">library_add</i>Novo Livro
+              </a>
+            </li>
+            <li>
+              <a class="modal-trigger" href="#new-user">
+                <i class="material-icons left">person_add</i>Novo Usuário
+              </a>
+            </li>
+          </ul>
+
+        </div>
+    </div>
+    <div class="nav-content grey darken-4">
+      <ul class="tabs tabs-transparent tabs-fixed-width">
+        <li class="tab">
+          <a href="#livros" class="active tooltipped" data-position="bottom" data-tooltip="Biblioteca">
+            <i class="material-icons">library_books</i>
+          </a>
+        </li>
+        <li class="tab">
+          <a href="#usuarios" class="active tooltipped" data-position="bottom" data-tooltip="Usuários">
+            <i class="material-icons">group</i>
+          </a>
+        </li>
+      </ul>
+    </div>    
+  </nav>
+
+  <div id="livros">
+    <div class="row">
+      <div class="col s12" id="books-list"></div>
+    </div>   
   </div>
 
-  <div class="row">
-    <div class="col s12" id="books-list">
-      <div class="card red" id="nothing-to-display">
-        <div class="card-content title">
-          Nenhum Livro a ser exibido aqui. Utilize o menu <i>Novo</i> para adicionar livros.
-        </div>
+  <div id="usuarios">
+    <div class="row">
+      <div class="col s12" id="users-list">
+        
       </div>
     </div>
   </div>
 
-  <div id="new-book" class="modal">
+  <div id="new-book" class="modal modal-fixed-footer">
     <div class="modal-content">
       <form id="new-book-form" enctype="multipart/form-data" >
         <div class="row">
-          <input type="text" value="" id="id" name="id" style="display: none">
+          <input type="text" value="" id="bookId" name="id" style="display: none">
           <div class="input-field file-field col s8">
             <div class="btn">
               <span>Capa</span>
@@ -83,16 +122,74 @@
     </div>
   </div>
   <div class="modal-footer">
-    <a href="#!" class="btn-flat btn" id="save-new-book"><i class="material-icons left">save</i>Salvar</a>
+    <a href="#!" class="btn-flat btn" id="new-book-button"><i class="material-icons left">save</i>Salvar</a>
     <a href="#!" class="modal-close btn-flat btn"><i class="material-icons left">close</i>Fechar</a>
   </div>
+</div>
+
+<div id="login-modal" class="modal modal-fixed-footer">
+  <div class="modal-content">
+    <div class="card-panel red" style="display: none">
+      <p><i class="material-icons">block</i> Você precisa estar logado para fazer isso</p>
+    </div>
+    <form id="not-logged-form">
+      <div class="input-field">
+        <input type="email" name="userEmail" required>
+        <label for="userEmail">Email</label>
+      </div>
+      <div class="input-field">
+        <input type="password" name="userPassword" required>
+        <label for="userPassword">Senha</label>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="btn-flat btn" id="login"><i class="material-icons left">send</i>Entrar</a>
+</div>
+</div>
+
+
+  <div id="new-user" class="modal modal-fixed-footer">
+    <div class="modal-content">
+      <form id="new-user-form">
+        <div class="row">
+          <input type="text" value="" id="userId" name="id" style="display: none">
+          <div class="input-field col s6">
+            <input type="text" name="userName" class="validate" required>
+            <label for="userName">Nome do Usuário</label>
+          </div>
+          <div class="input-field col s6">
+            <input type="email" name="userEmail" class="validate" required>
+            <label for="userEmail">Email do Usuário</label>
+          </div>
+
+          <div class="input-field col s6">
+            <input type="password" name="userPassword" class="validate" required>
+            <label for="userPassword">Senha</label>
+          </div>
+          <div class="input-field col s6">
+            <input type="password" name="userPasswordConfirmation" class="validate" required>
+            <label for="userPasswordConfirmation">Digite novamente a senha</label>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="btn-flat btn" id="new-user-button">
+          <i class="material-icons left">save</i>Salvar
+        </a>
+        <a href="#!" class="modal-close btn-flat btn">
+          <i class="material-icons left">close</i>Fechar
+        </a>
+      </div>
+    </div>
 
   <template id="book-template">
     <div class="col s2">
       <div class="card">
         <div class="card-image">
           <img src="" alt="">
-          <a class="btn-floating halfway-fab yellow btn"><i class="material-icons">star</i></a>
+          <a class="btn-floating halfway-fab yellow btn" id="add-to-favs"><i class="material-icons">star</i></a>
         </div>
         <div class="card-content">
           <span class="card-title"></span>
@@ -109,7 +206,27 @@
     </div>
   </template>
 
-  <script type="text/javascript" src="/javascripts/index.js"></script>
+    <template id="user-template">
+    <div class="col s2">
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title" style="text-align: center" id="user-name"></span>
+          <p><span>Email:</span><span id="user-email"></span></p>
+          <div class="collection" id="user-favorite-books"></div>
+        </div>
+        <div class="card-action">
+          <button class="btn btn-flat" id="delete-user" ><i class="material-icons left">delete</i>Exluir</button>
+          <button class="btn btn-flat" id="edit-user"><i class="material-icons left">edit</i>Editar</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script type="text/javascript" src="/javascripts/auth.js"></script>
+  <script type="text/javascript" src="/javascripts/library.js"></script>
+  <script type="text/javascript" src="/javascripts/users.js"></script>
+  <script type="text/javascript" src="/javascripts/navbar.js"></script>
+  <script type="text/javascript" src="/javascripts/util.js"></script>
 </body>
 
 </html>

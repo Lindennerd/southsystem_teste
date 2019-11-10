@@ -6,6 +6,10 @@ body {
   background-color: #fe6e00;
 }
 
+.nav-content ul li:hover {
+  background-color: #fe6e00;
+}
+
 .brand-logo:hover {
   color: #fe6e00 !important;
 }

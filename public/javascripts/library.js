@@ -1,10 +1,9 @@
-function Index() {
+function library() {
     const self = this;
     self.$bookList = document.querySelector('#books-list');
     self.$newBookForm = document.querySelector('#new-book-form');
-    self.$saveNewBook = document.querySelector('#save-new-book');
+    self.$newBookBtn = document.querySelector('#new-book-button');
     self.$bookTemplate = document.querySelector('#book-template');
-    self.$nothingToDisplay = document.querySelector('#nothing-to-display');
     self.$bookCover = document.querySelector('#bookCover');
     self.$bookCoverPreview = document.querySelector('#book-cover-preview');
     self.fileBase64 = null;
@@ -24,7 +23,7 @@ function Index() {
     function loadBooks() {
 
         if (self.books.length > 0) {
-            self.$nothingToDisplay.style.display = 'none';
+            
             self.books.forEach(book => {
                 const clone = document.importNode($bookTemplate.content, true);
 
@@ -37,6 +36,7 @@ function Index() {
                 clone.querySelector('#book-category').textContent += ' ' + book.bookCategory;
                 clone.querySelector('.card-action').setAttribute('data-id', book.id);
 
+                clone.querySelector('#add-to-favs').onclick = addToFavs;
                 clone.querySelector('#edit-book').onclick = editBook;
                 clone.querySelector('#delete-book').onclick = deleteBook;
 
@@ -45,16 +45,21 @@ function Index() {
         }
     }
 
+    function addToFavs() {
+        if(!auth().user) {
+            auth().displayLoginModal(true); /* warn the user */
+        }
+    }
+
     async function saveNewBook() {
-        if (newBookIsValid()) {
+        if (formIsValid(self.$newBookForm)) {
+            const headers = auth().getAuthHeaders();
             const data = getFormAsJson($newBookForm);
             data.bookCover = self.fileBase64;
             const response = await fetch('/books', {
                 method: data.id === '' ? 'POST' : 'PUT',
                 body: JSON.stringify(data),
-                headers: new Headers({
-                    'Content-Type': 'application/json'
-                })
+                headers: headers
             });
 
             if (response.status === 200) {
@@ -103,28 +108,6 @@ function Index() {
         }
     }
 
-    function newBookIsValid() {
-        let hasErrors = true;
-        const inputs = self.$newBookForm.querySelectorAll('input, select');
-        inputs.forEach(input => {
-            if (input.required && input.value === '') {
-                hasErrors = false;
-                input.parentElement.classList.add('invalid');
-            }
-        });
-
-        return hasErrors;
-    }
-
-    function getFormAsJson(form) {
-        const json = {};
-        for (let pair of new FormData(form).entries()) {
-            json[pair[0]] = pair[1];
-        }
-
-        return json;
-    }
-
 
     function displayCoverPreview(e) {
         if (e.target.files && e.target.files[0]) {
@@ -140,16 +123,25 @@ function Index() {
     }
 
 
-    var elems = document.querySelectorAll('.modal');
+    var elems = document.querySelectorAll('#new-book');
     self.newBookModal = M.Modal.init(elems);
+
+    var elems = document.querySelectorAll('#new-user');
+    self.newUserModal = M.Modal.init(elems);
 
     var elems = document.querySelectorAll('select');
     M.FormSelect.init(elems);
 
+    var elems = document.querySelectorAll('.tabs');
+    M.Tabs.init(elems);
+
+    var elems = document.querySelectorAll('.tooltipped');
+    M.Tooltip.init(elems);
+
     self.$bookCover.onchange = displayCoverPreview;
-    self.$saveNewBook.onclick = saveNewBook;
+    self.$newBookBtn.onclick = saveNewBook;
 
     getBooks();
 }
 
-window.addEventListener('DOMContentLoaded', Index());
+window.addEventListener('DOMContentLoaded', library());

@@ -1,16 +1,22 @@
 const express = require("express");
 const shortId = require("shortid");
+const secret = require('../secret');
 
 const db = require("../database");
 
 const router = express.Router();
 
 router.get("/", function (req, res, next) {
-  const books = db.get("books");
-  res.json(books);
+  if(req.query) {
+    const books = db.get('books').filter(req.query);
+    res.json(books);
+  } else {
+    const books = db.get("books");
+    res.json(books);    
+  }
 });
 
-router.post("/", function (req, res, next) {
+router.post("/",function (req, res, next) {
   try {
     const book = req.body;
     book.id = shortId.generate();
@@ -24,7 +30,7 @@ router.post("/", function (req, res, next) {
   }
 });
 
-router.put("/", function (req, res, next) {
+router.put("/",function (req, res, next) {
   try {
     const book = req.body;
     db.get('books')
@@ -42,7 +48,6 @@ router.put("/", function (req, res, next) {
 router.delete('/', function (req, res, next) {
   try {
     const bookId = req.body.id;
-    console.log(bookId);
     db.get('books')
       .remove({ id: bookId })
       .write();
