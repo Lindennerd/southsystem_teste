@@ -4,6 +4,7 @@ const secret = require('../secret');
 
 const auth = async(req, res, next) => {
 	const user = req.header('Authorization');
+	console.log(user);
 	const data = jwt.verify(user.token, secret.key);
 
 	if(data) {

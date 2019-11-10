@@ -1,6 +1,7 @@
 const express = require("express");
 const shortId = require("shortid");
-const secret = require('../secret');
+
+const auth = require('../middleware/auth');
 
 const db = require("../database");
 
@@ -16,7 +17,7 @@ router.get("/", function (req, res, next) {
   }
 });
 
-router.post("/",function (req, res, next) {
+router.post("/", auth, function (req, res, next) {
   try {
     const book = req.body;
     book.id = shortId.generate();
@@ -30,7 +31,7 @@ router.post("/",function (req, res, next) {
   }
 });
 
-router.put("/",function (req, res, next) {
+router.put("/", auth, function (req, res, next) {
   try {
     const book = req.body;
     db.get('books')
@@ -45,7 +46,7 @@ router.put("/",function (req, res, next) {
   }
 });
 
-router.delete('/', function (req, res, next) {
+router.delete('/', auth, function (req, res, next) {
   try {
     const bookId = req.body.id;
     db.get('books')

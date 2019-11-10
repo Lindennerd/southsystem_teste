@@ -45,7 +45,7 @@ function auth() {
 	function getAuthHeaders() {
 		return new Headers({
 	        'Content-Type': 'application/json',
-	        'Authentication': self.user
+	        'Authorization': self.user
     	});
 	}
 

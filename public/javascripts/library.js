@@ -20,7 +20,7 @@ function library() {
         }
     }
 
-    function loadBooks() {
+    async function loadBooks() {
 
         if (self.books.length > 0) {
             
@@ -36,18 +36,40 @@ function library() {
                 clone.querySelector('#book-category').textContent += ' ' + book.bookCategory;
                 clone.querySelector('.card-action').setAttribute('data-id', book.id);
 
-                clone.querySelector('#add-to-favs').onclick = addToFavs;
                 clone.querySelector('#edit-book').onclick = editBook;
                 clone.querySelector('#delete-book').onclick = deleteBook;
+                clone.querySelector('#add-to-favs').onclick = e => {
+                    addToFavs(book.id)
+                };
 
                 self.$bookList.appendChild(clone);
             });
         }
     }
 
-    function addToFavs() {
+    async function addToFavs(id) {
         if(!auth().user) {
             auth().displayLoginModal(true); /* warn the user */
+        } else {
+            const user = auth().user;
+
+            if(!user.favoriteBooks) user.favoriteBooks = [];
+
+            user.favoriteBooks.push(id); 
+
+            const response = await fetch('/users', {
+                method: 'PUT',
+                body: JSON.stringify(user),
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                })
+            });
+
+            if(response.status === 200) {
+                M.toast({ html: 'Livro adicionado com sucesso', classes: 'green', displayLength: 4000 });
+            } else {
+                M.toast({ html: 'Ocorreu um erro ao adicionar o livro aos favoritos', classes: 'red', displayLength: 4000 });
+            }
         }
     }
 
@@ -79,14 +101,14 @@ function library() {
         const editingId = e.target.parentElement.getAttribute('data-id');
         const editingBook = self.books.find(book => { return book.id === editingId });
         if (editingBook) {
-            self.$newBookForm.querySelector('#id').value = editingBook.id;
-            self.$newBookForm.querySelector('#bookTitle').value = editingBook.bookTitle;
-            self.$newBookForm.querySelector('#bookISBN').value = editingBook.bookISBN;
-            self.$newBookForm.querySelector('#bookCategory').value = editingBook.bookCategory;
-            self.$newBookForm.querySelector('#bookYear').value = editingBook.bookYear;
-            self.$newBookForm.querySelector('#bookAuthor').value = editingBook.bookAuthor;
+            self.$newBookForm.id.value = editingBook.id;
+            self.$newBookForm.bookTitle.value = editingBook.bookTitle;
+            self.$newBookForm.bookISBN.value = editingBook.bookISBN;
+            self.$newBookForm.bookCategory.value = editingBook.bookCategory;
+            self.$newBookForm.bookYear.value = editingBook.bookYear;
+            self.$newBookForm.bookAuthor.value = editingBook.bookAuthor;
 
-            self.newBookModal[0].open();
+            navbar.newBookModal.open();
         }
     }
 
@@ -121,13 +143,6 @@ function library() {
             reader.readAsDataURL(e.target.files[0]);
         }
     }
-
-
-    var elems = document.querySelectorAll('#new-book');
-    self.newBookModal = M.Modal.init(elems);
-
-    var elems = document.querySelectorAll('#new-user');
-    self.newUserModal = M.Modal.init(elems);
 
     var elems = document.querySelectorAll('select');
     M.FormSelect.init(elems);

@@ -25,26 +25,16 @@
 
 	                clone.querySelector('#user-name').textContent = user.userName;
 	                clone.querySelector('#user-email').textContent += ' ' + user.userEmail;
+                	clone.querySelector('.card-action').setAttribute('data-id', user.id);
+
 					const $favoriteBooks = clone.querySelector('#user-favorite-books')
 	                if(user.favoriteBooks) {               
 		                user.favoriteBooks.forEach(async favBook => {
-		                	const response = await fetch(`/books?id=${favBook.id}`);
+		                	const response = await fetch(`/books?id=${favBook}`);
 		                	const book = await response.json();
 		                	const item = document.createElement('div');
 		                	item.classList.add('collection-item');
-		                	item.textContent = `${book.bookTitle} - ${book.bookAuthor}`;		            
-
-		                	const favBtn = document.createElement('a');
-		                	favBtn.classList.add('secondary-content yellow');
-		                	favBtn.setAttribute('href', '');
-
-		                	const icon = document.createElement('i');
-		                	icon.classList.add('material-icons');
-		                	icon.textContent = 'grade';
-
-		                	favBtn.appendChild(icon);
-		                	item.appendChild(favBtn);
-
+		                	item.textContent = `${book[0].bookTitle} - ${book[0].bookAuthor}`;		            
 		                	$favoriteBooks.appendChild(item);
 
 		                });	                	
@@ -56,7 +46,7 @@
 	                	$favoriteBooks.appendChild(item);
 	                }
 	   
-	                clone.querySelector('#edit-user').onclick = editUser;
+	                clone.querySelector('#edit-user').onclick = editUser;  				
 	                clone.querySelector('#delete-user').onclick = deleteUser;
 
 	                self.$usersList.appendChild(clone);
@@ -66,11 +56,36 @@
 		}
 
 		function editUser(e) {
+			const editingId = e.target.parentElement.getAttribute('data-id');
+	        const editingUser = self.users.find(user => { return user.id === editingId });
+	        if (editingUser) {
+	            self.$newUserForm.id.value = editingUser.id;
+	            self.$newUserForm.userName.value = editingUser.userName;
+	            self.$newUserForm.userEmail.value = editingUser.userEmail;
 
+	            self.$newUserForm.userPassword.required = false;
+	            self.$newUserForm.userPasswordConfirmation.required = false;
+
+	            navbar.newUserModal.open();
+	        }
 		}
 
 		async function deleteUser(e) {
+			const deletingId = e.target.parentElement.getAttribute('data-id');
+			const response = await fetch('/users', {
+			    method: 'DELETE',
+			    body: JSON.stringify({'id': deletingId}),
+			    headers: new Headers({
+			        'Content-Type': 'application/json'
+			    })
+			});
 
+			if(response.status === 200) {
+			    M.toast({ html: 'Excluido com sucesso', classes: 'green', displayLength: 4000 });
+			    getUsers();
+			} else {
+			    M.toast({ html: 'Ocorreu um erro', classes: 'red', displayLength: 4000 });
+			}
 		}
 
 		async function saveUser() {
@@ -107,6 +122,7 @@
 		self.$newUserBtn.onclick = saveUser;
 
 		getUsers();
+
 	}
 
-	document.addEventListener('DOMContentLoaded', Users);
+	document.addEventListener('DOMContentLoaded', Users());

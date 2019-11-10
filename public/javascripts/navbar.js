@@ -37,6 +37,19 @@ function navbar() {
 		auth().displayLoginModal(false); /*do not warn the user*/
 	};
 
+	var elems = document.querySelectorAll('#new-user');
+	self.newUserModal = M.Modal.init(elems);
+
+    var elems = document.querySelectorAll('#new-book');
+    self.newBookModal = M.Modal.init(elems);
+
+    return {
+    	newUserModal: self.newUserModal[0],
+    	newBookModal: self.newBookModal[0]
+    }	
+
 }
 
-document.addEventListener('DOMContentLoaded', navbar());
+document.addEventListener('DOMContentLoaded', () => {
+	navbar = new navbar();
+});
