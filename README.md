@@ -13,3 +13,6 @@ npm install
 ## Demo
 
 Acesse a [demo](https://southsystem-biblioteca.herokuapp.com/)
+
+*usuário padrão*: default@default.com
+*senha*: 123
