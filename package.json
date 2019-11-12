@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "nodemonConfig": {
-    "ignore": [ "db.json" ]
+    "ignore": [
+      "db.json"
+    ]
   },
   "scripts": {
     "start": "node ./bin/www",

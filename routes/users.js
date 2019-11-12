@@ -8,16 +8,19 @@ const db = require("../database");
 
 var router = express.Router();
 
-/* GET users listing. */
 router.get('/', function(req, res, next) {
 	const users = db.get('users').forEach(user => {
-    delete user.userPassword;
-    return user;
+    return {
+      userName: user.userName,
+      userEmail: user.userEmail,
+      favoriteBooks: user.favoriteBooks,
+      id: user.id
+    };
   });
   res.json(users);
 });
 
-router.post("/", auth, function (req, res, next) {
+router.post("/", function (req, res, next) {
   try {
     const user = req.body;
     user.userPassword = md5(user.userPassword);
@@ -41,10 +44,11 @@ router.put("/", auth, function (req, res, next) {
       .find({id: user.id})
       .write();
 
-    const userPassword = user.userPassword !== '' 
+    const userPassword = user.userPassword 
+      && user.userPassword !== ''
       && md5(user.userPassword) !== dbUser.userPassword
-        ? dbUser.userPassword
-        : md5(user.userPassword);
+        ? md5(user.userPassword)
+        : dbUser.userPassword;
 
     db.get('users')
       .find({ id: user.id })

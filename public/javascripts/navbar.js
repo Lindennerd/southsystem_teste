@@ -21,6 +21,7 @@ function navbar() {
 
 	function setUserInfo() {
 		const user = auth().user;
+		self.$user.innerHTML = '';
 		self.$user.innerHTML += `Encerrar sessão de ${user.userName}`;
 	}
 
@@ -41,7 +42,10 @@ function navbar() {
 	self.newUserModal = M.Modal.init(elems);
 
     var elems = document.querySelectorAll('#new-book');
-    self.newBookModal = M.Modal.init(elems);
+	self.newBookModal = M.Modal.init(elems);
+	
+	var elems = document.querySelectorAll('.sidenav');
+    M.Sidenav.init(elems);
 
     return {
     	newUserModal: self.newUserModal[0],
